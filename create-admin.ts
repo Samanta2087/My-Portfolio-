@@ -1,10 +1,17 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/node-postgres";
+import pkg from "pg";
+const { Pool } = pkg;
 import * as schema from "./shared/schema";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
 
-const sqlite = new Database("./local.db");
-const db = drizzle(sqlite, { schema });
+dotenv.config();
+
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL || process.env.DATABASE_URL,
+});
+
+const db = drizzle(pool, { schema });
 
 async function createAdminUser() {
   const username = "JeetVK";
@@ -23,13 +30,13 @@ async function createAdminUser() {
     console.log(`Password: ${password}`);
     console.log("\n⚠️  IMPORTANT: Change the password after first login!");
   } catch (error: any) {
-    if (error.message?.includes("UNIQUE")) {
+    if (error.message?.includes("UNIQUE") || error.message?.includes("unique")) {
       console.log("ℹ️  Admin user already exists");
     } else {
       console.error("❌ Error creating admin user:", error);
     }
   } finally {
-    sqlite.close();
+    await pool.end();
   }
 }
 
