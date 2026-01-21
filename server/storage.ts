@@ -1,38 +1,26 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
+import * as schema from "@shared/schema";
 
-// modify the interface with any CRUD methods
-// you might need
+const sqlite = new Database("./local.db");
+export const db = drizzle(sqlite, { schema });
 
-export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-}
-
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
-  }
-
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+export const storage = {
+  // Legacy interface - keeping for backward compatibility
+  async getUser(id: string) {
+    return db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.id, id),
+    });
+  },
+  
+  async getUserByUsername(username: string) {
+    return db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.username, username),
+    });
+  },
+  
+  async createUser(insertUser: schema.InsertUser) {
+    const [user] = await db.insert(schema.users).values(insertUser).returning();
     return user;
-  }
-}
-
-export const storage = new MemStorage();
+  },
+};

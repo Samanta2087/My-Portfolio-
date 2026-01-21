@@ -66,7 +66,6 @@ export default function Contact() {
 
         <div className="mt-12 sm:mt-16 md:mt-24 pt-6 md:pt-8 border-t border-border flex flex-col gap-2 md:flex-row justify-between items-center text-[10px] sm:text-xs font-mono text-muted-foreground">
           <p>© {new Date().getFullYear()} SAMANTA MONDAL. ALL SYSTEMS OPERATIONAL.</p>
-          <p>DESIGNED_BY_REPLIT_AGENT</p>
         </div>
       </div>
     </section>
