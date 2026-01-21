@@ -5,6 +5,10 @@ import { createServer } from "http";
 import compression from "compression";
 import session from "express-session";
 import passport from "passport";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
