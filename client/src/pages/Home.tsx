@@ -1,43 +1,28 @@
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
 import { lazy, Suspense } from "react";
+import SpaceNavbar from "@/components/SpaceNavbar";
+import SpaceHero from "@/components/SpaceHero";
+import SpaceAbout from "@/components/SpaceAbout";
+import SpaceSkills from "@/components/SpaceSkills";
+import SpaceProjects from "@/components/SpaceProjects";
+import SpaceContact from "@/components/SpaceContact";
 
-// Don't lazy load Hero - it's above the fold and critical for LCP
-// Lazy load below-the-fold components for better performance
-const About = lazy(() => import("@/components/About"));
-const Skills = lazy(() => import("@/components/Skills"));
-const Projects = lazy(() => import("@/components/Projects"));
-const Philosophy = lazy(() => import("@/components/Philosophy"));
-const Contact = lazy(() => import("@/components/Contact"));
-
-// Loading fallback component
-const SectionLoader = () => (
-  <div className="flex items-center justify-center py-20">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-  </div>
-);
+const StarsCanvas = lazy(() => import("@/components/StarBackground"));
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
-      <Navigation />
-      <main>
-        <Hero />
-        <Suspense fallback={<SectionLoader />}>
-          <About />
-        </Suspense>
-        <Suspense fallback={<SectionLoader />}>
-          <Skills />
-        </Suspense>
-        <Suspense fallback={<SectionLoader />}>
-          <Projects />
-        </Suspense>
-        <Suspense fallback={<SectionLoader />}>
-          <Philosophy />
-        </Suspense>
-        <Suspense fallback={<SectionLoader />}>
-          <Contact />
-        </Suspense>
+    <div className="h-full w-full bg-[#030014] overflow-y-scroll overflow-x-hidden">
+      <Suspense fallback={<div className="w-full h-full fixed inset-0 z-[20] bg-[#030014]" />}>
+        <StarsCanvas />
+      </Suspense>
+      <SpaceNavbar />
+      <main className="h-full w-full">
+        <div className="flex flex-col gap-20">
+          <SpaceHero />
+          <SpaceAbout />
+          <SpaceSkills />
+          <SpaceProjects />
+          <SpaceContact />
+        </div>
       </main>
     </div>
   );

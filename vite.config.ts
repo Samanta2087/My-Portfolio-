@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-import { metaImagesPlugin } from "./vite-plugin-meta-images";
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { visualizer } from 'rollup-plugin-visualizer';
 
@@ -12,7 +11,6 @@ export default defineConfig({
     react(),
     runtimeErrorOverlay(),
     tailwindcss(),
-    metaImagesPlugin(),
     ViteImageOptimizer({
       png: {
         quality: 80,
